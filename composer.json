@@ -1,11 +1,11 @@
 {
-	"name": "clevisaci/se34",
-	"version": "0.1.0"
+	"name": "clevis/se34",
+	"version": "0.1.0",
 	"type": "library",
 	"description": "Auxiliary classes for Selenium testing.",
 	"require": {
 		"php": ">=5.3.0",
 		"phpunit/phpunit": "3.7.7",
 		"phpunit/phpunit-selenium": "dev-master"
-	},
+	}
 }
