@@ -5,7 +5,7 @@
 	"description": "Auxiliary classes for Selenium testing.",
 	"require": {
 		"php": ">=5.3.0",
-		"phpunit/phpunit": "3.7.7",
+		"phpunit/phpunit": ">=3.7.7",
 		"phpunit/phpunit-selenium": "dev-master"
 	}
 }
