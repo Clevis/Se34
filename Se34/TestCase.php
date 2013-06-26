@@ -147,10 +147,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 		if (!$element->equals($other))
 		{
 			$message = __FUNCTION__ . ': Element id=' . $element->getId()
-					. ' (tag = "' . $element->name() . '"' . (($htmlId = $element->attribute('id')) !== '' ? ", html id=\"$htmlId\"" : '') . ')'
-					. ' does not equal to element id=' . $other->getId()
-					. ' (tag = "' . $other->name() . '"' . (($htmlId = $other->attribute('id')) !== '' ? ", html id=\"$htmlId\"" : '') . ')'
-					. '.';
+				. ' (tag = "' . $element->name() . '"' . (($htmlId = $element->attribute('id')) !== '' ? ", html id=\"$htmlId\"" : '') . ')'
+				. ' does not equal to element id=' . $other->getId()
+				. ' (tag = "' . $other->name() . '"' . (($htmlId = $other->attribute('id')) !== '' ? ", html id=\"$htmlId\"" : '') . ')'
+				. '.';
 			$this->fail($message);
 		}
 		else

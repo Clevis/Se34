@@ -9,4 +9,5 @@ namespace Se34;
  */
 class BluescreenException extends \RuntimeException
 {
+
 }

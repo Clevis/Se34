@@ -43,14 +43,14 @@ abstract class PageObject extends Object implements IPageObject
 	 *
 	 * <code>
 	 * array(
-	 * 	// @property-read Element $propertyName strategy=value, expectedTagName, (attrib = value)
-	 * 	'propertyName' => array(
-	 * 		'strategy',
-	 * 		'value',
-	 * 		FALSE, // is array of elements
-	 * 		'expectedTagName',
-	 * 		array('attrib' => 'value'),
-	 * 	),
+	 *    // @property-read Element $propertyName strategy=value, expectedTagName, (attrib = value)
+	 *    'propertyName' => array(
+	 *        'strategy',
+	 *        'value',
+	 *        FALSE, // is array of elements
+	 *        'expectedTagName',
+	 *        array('attrib' => 'value'),
+	 *    ),
 	 * );
 	 * </code>
 	 * @var array
@@ -62,13 +62,13 @@ abstract class PageObject extends Object implements IPageObject
 	 *
 	 * <code>
 	 * array(
-	 * 	// @method Foo clickBar()
-	 * 	'clickBar' => array(
-	 * 		'bar',       // název zkratky
-	 * 		'click',     // název metody volané na zkratce
-	 * 		'Foo',       // název třídy dalšího page objektu
-	 * 		'SomeClass', // definující třída (kvůli namespacu)
-	 * 	)
+	 *    // @method Foo clickBar()
+	 *    'clickBar' => array(
+	 *        'bar',       // název zkratky
+	 *        'click',     // název metody volané na zkratce
+	 *        'Foo',       // název třídy dalšího page objektu
+	 *        'SomeClass', // definující třída (kvůli namespacu)
+	 *    )
 	 * );
 	 * </code>
 	 * @var array
@@ -158,8 +158,8 @@ abstract class PageObject extends Object implements IPageObject
 	 *
 	 * <code>
 	 * $page->fill(array(
-	 * 	'foo' => 'bar',
-	 * 	'e' => 'mc^2',
+	 *    'foo' => 'bar',
+	 *    'e' => 'mc^2',
 	 * ));
 	 * // Provede tohle:
 	 * $page->fillFoo('bar')
@@ -184,7 +184,10 @@ abstract class PageObject extends Object implements IPageObject
 	private function getThisClasses()
 	{
 		$lineage = array(get_class($this));
-		while (($lineage[] = get_parent_class(end($lineage))) !== FALSE);
+		while (($lineage[] = get_parent_class(end($lineage))) !== FALSE)
+		{
+			;
+		}
 		array_pop($lineage);
 		rsort($lineage);
 		return $lineage;
@@ -372,10 +375,13 @@ abstract class PageObject extends Object implements IPageObject
 				}
 				$nextPage = new $returnType($this->session);
 			}
-			try {
+			try
+			{
 				$nextPage->checkState();
 				return $nextPage;
-			} catch (\Se34\ViewStateException $viewStateException) {
+			}
+			catch (\Se34\ViewStateException $viewStateException)
+			{
 				;
 			}
 		}
@@ -442,11 +448,11 @@ abstract class PageObject extends Object implements IPageObject
 			return $this->getNextPageFromList(explode('|', $this->methods[$name][2]), $this->methods[$name][3]);
 		}
 		elseif (
-				substr($name, 0, 4) === 'fill'
-				&& (
+			substr($name, 0, 4) === 'fill'
+			&& (
 				isset($this->{$shortcut = substr($name, 4)})
 				|| isset($this->{$shortcut = lcfirst(substr($name, 4))})
-				)
+			)
 		)
 		{
 			callback($this->$shortcut, 'value')->invokeArgs($args);

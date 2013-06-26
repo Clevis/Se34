@@ -25,7 +25,10 @@ use Nette\ObjectMixin;
  * @method NULL touchMove($jsonParameters = NULL) Finger move on the screen. JSON Parameters: x, y.
  * @method NULL touchScroll($jsonParameters = NULL) Scroll on the touch screen using finger based motion events. JSON Parameters: element, xoffset, yoffset.
  * @method NULL flick($jsonParameters = NULL) Flick on the touch screen using finger motion events. JSON Parameters: element, xoffset, yoffset, speed.
- * @method array|NULL location($jsonParameters = NULL) Get/set the current geo location. JSON Parameters: location - {latitude: number, longitude: number, altitude: number}
+ * @method array|NULL location($jsonParameters = NULL) Get/set the current geo location. JSON Parameters: location -
+{
+latitude: number, longitude: number, altitude: number
+}
  * @method string orientation() Get the current browser orientation.
  * @author Václav Šír
  */
@@ -71,13 +74,13 @@ class BrowserSession extends \PHPUnit_Extensions_Selenium2TestCase_Session
 		$sessionCreationApiUrl = $seleniumServerUrl->descend("/wd/hub/session");
 		$sessionCreationResponse = $driver->curl('POST', $sessionCreationApiUrl, array(
 			'desiredCapabilities' => $context->parameters['selenium']['desiredCapabilities']
-				));
+		));
 		$sessionApiUrl = $sessionCreationResponse->getUrl();
 		$baseUrl = new \PHPUnit_Extensions_Selenium2TestCase_URL($context->parameters['selenium']['baseUrl']);
 		$timeouts = new \PHPUnit_Extensions_Selenium2TestCase_Session_Timeouts(
-						$driver,
-						$sessionApiUrl->descend('timeouts'),
-						60 * 1000
+			$driver,
+			$sessionApiUrl->descend('timeouts'),
+			60 * 1000
 		);
 
 		parent::__construct($driver, $sessionApiUrl, $baseUrl, $timeouts);
@@ -86,8 +89,8 @@ class BrowserSession extends \PHPUnit_Extensions_Selenium2TestCase_Session
 	protected function initCommands()
 	{
 		$commands = parent::initCommands() + array(
-			'doubleclick' => 'PHPUnit_Extensions_Selenium2TestCase_ElementCommand_GenericPost',
-		);
+				'doubleclick' => 'PHPUnit_Extensions_Selenium2TestCase_ElementCommand_GenericPost',
+			);
 		return $commands;
 	}
 
@@ -154,13 +157,15 @@ class BrowserSession extends \PHPUnit_Extensions_Selenium2TestCase_Session
 		do
 		{
 			sleep(1);
-			try {
+			try
+			{
 				$result = $this->alertText();
-			} catch (\RuntimeException $e) {
+			}
+			catch (\RuntimeException $e)
+			{
 				;
 			}
-		}
-		while (++$i < $timeout && $result === FALSE);
+		} while (++$i < $timeout && $result === FALSE);
 		return $result;
 	}
 
@@ -199,10 +204,9 @@ class BrowserSession extends \PHPUnit_Extensions_Selenium2TestCase_Session
 		do
 		{
 			sleep(1);
-		}
-		while (
-		!($result = $this->execute(array('script' => 'return ' . $jsCondition, 'args' => array())))
-		&& $i++ < $timeout
+		} while (
+			!($result = $this->execute(array('script' => 'return ' . $jsCondition, 'args' => array())))
+			&& $i++ < $timeout
 		);
 		return $result;
 	}
@@ -288,11 +292,11 @@ class BrowserSession extends \PHPUnit_Extensions_Selenium2TestCase_Session
 			);
 			$funcGetArgs = func_get_args();
 			if (
-					$funcGetArgs !== array('execute', array($checkExecuteArgs))
-					&& $funcGetArgs !== array('byId', array($this->blueScreenId))
-					&& $funcGetArgs !== array('url', array())
-					&& !in_array($command, $this->commandsWithoutCheckForBluescreen)
-					&& $this->execute($checkExecuteArgs)
+				$funcGetArgs !== array('execute', array($checkExecuteArgs))
+				&& $funcGetArgs !== array('byId', array($this->blueScreenId))
+				&& $funcGetArgs !== array('url', array())
+				&& !in_array($command, $this->commandsWithoutCheckForBluescreen)
+				&& $this->execute($checkExecuteArgs)
 			)
 			{
 				$text = $this->byId($this->blueScreenId)->text();

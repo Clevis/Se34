@@ -12,4 +12,5 @@ namespace Se34;
  */
 class ViewStateException extends \RuntimeException
 {
+
 }
