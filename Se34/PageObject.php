@@ -371,7 +371,7 @@ abstract class PageObject extends Object implements IPageObject
 					{
 						$method = "metody $className::{$backtrace[1]['function']}()";
 					}
-					throw new \UnexpectedValueException(__METHOD__ . ": Návratový typ $method je '$returnType' a ten " . (class_exists($returnType) ? 'neexistuje.' : " není typu 'Se34\IPageObject'."));
+					throw new \UnexpectedValueException(__METHOD__ . ": Návratový typ $method je '$returnType' a ten " . (class_exists($returnType) ? 'neexistuje.' : " není typu 'Se34\\IPageObject'."));
 				}
 				$nextPage = new $returnType($this->session);
 			}
@@ -415,9 +415,9 @@ abstract class PageObject extends Object implements IPageObject
 			{
 				$annotations = Utils::getClassAnnotations($className);
 				$methodAnnotations = isset($annotations['method']) ? $annotations['method'] : array();
-				foreach ($methodAnnotations as $methodAnnotations)
+				foreach ($methodAnnotations as $methodAnnotation)
 				{
-					if (preg_match('~^(?<type>[^\s]+)\s+(?<methodName>[^\s(]+)~', $methodAnnotations, $matches))
+					if (preg_match('~^(?<type>[^\s]+)\s+(?<methodName>[^\s(]+)~', $methodAnnotation, $matches))
 					{
 						$returnType = $matches['type'];
 						$fullMethodName = $matches['methodName'];
