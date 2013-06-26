@@ -311,7 +311,7 @@ class BrowserSession extends \PHPUnit_Extensions_Selenium2TestCase_Session
 	/** @see Nette\ObjectMixin */
 	public function __set($name, $value)
 	{
-		return ObjectMixin::set($this, $name, $value);
+		ObjectMixin::set($this, $name, $value);
 	}
 
 	/** @see Nette\ObjectMixin */

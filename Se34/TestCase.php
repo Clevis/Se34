@@ -168,7 +168,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 	/** @see Nette\ObjectMixin */
 	public function __set($name, $value)
 	{
-		return ObjectMixin::set($this, $name, $value);
+		ObjectMixin::set($this, $name, $value);
 	}
 
 	/** @see Nette\ObjectMixin */
