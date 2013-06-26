@@ -1,6 +1,5 @@
 {
 	"name": "clevis/se34",
-	"version": "0.1.0",
 	"type": "library",
 	"description": "Auxiliary classes for Selenium testing.",
 	"license": "MIT",
