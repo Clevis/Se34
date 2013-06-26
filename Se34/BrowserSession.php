@@ -148,7 +148,7 @@ class BrowserSession extends \PHPUnit_Extensions_Selenium2TestCase_Session
 	 * Počká na javascriptový alert, prompt nebo confirm.
 	 *
 	 * @param int $timeout Trpělivost v sekundách.
-	 * @return string|FALSE Text alertu, nebo FALSE (= alertu nedočkáno).
+	 * @return string|bool Text alertu, nebo FALSE (= alertu nedočkáno).
 	 */
 	public function waitForAlert($timeout = 60)
 	{
