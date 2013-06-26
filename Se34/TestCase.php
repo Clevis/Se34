@@ -91,7 +91,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 		{
 			$this->session->keepOpen();
 		}
-		$this->session = NULL;
+		if ($this->session)
+		{
+			$this->session->stop();
+		}
 	}
 
 	/**
