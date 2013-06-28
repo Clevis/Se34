@@ -5,10 +5,10 @@ namespace Se34;
 use Nette\ObjectMixin;
 
 /**
- * Základní třída pro seleniové testy.
+ * Base class for Selenium WebDriver based tests.
  *
  * @property-read \Nette\DI\Container|\SystemContainer $context
- * @property-read BrowserSession $session Aktuální browser session.
+ * @property-read BrowserSession $session Current browser session.
  * @author Václav Šír
  */
 abstract class TestCase extends \PHPUnit_Framework_TestCase
@@ -30,22 +30,23 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 	protected $keepOpenOnFailure = TRUE;
 
 	/**
-	 * Vytvoří systémový DI kontejner.
+	 * Creates system DI container.
 	 *
-	 * Je nutné, aby potomek v této metodě vytvořil DI container, který
-	 * poskytuje tyto parametry:
+	 * It is mandatory, that the descendant creates a DI container, that has
+	 * these parameters:
 	 *
 	 * <pre>
 	 * selenium:
-	 *   baseUrl: http://localhost/projekt/www/ # Adresa rootu webu
-	 *   seleniumServer: http://localhost:4444 # Adresa Selenium Serveru
+	 *   baseUrl: http://localhost/projekt/www/ # Adress of the root of the webu
+	 *   seleniumServer: http://localhost:4444 # Adress of the Selenium Server
 	 *   desiredCapabilities:
-	 *     browserName: firefox # Prohlížeč, který má Selenium použít
+	 *     browserName: firefox # Browser to use
 	 * </pre>
 	 *
-	 * Kontejner také musí dodávat službu typu {@see \Nette\Application\IRouter}
-	 * s názvem "router", jinak dost věcí nebude fungovat.
+	 * The container also relies on a service of type {@see \Nette\Application\Router}
+	 * with name "router", some thangs won't work otherwise.
 	 *
+	 * @todo Make BrowserSession a DIC service and inject router by its type.
 	 * @return \Nette\DI\Container
 	 */
 	abstract protected function createContext();
@@ -63,7 +64,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Vytvoří session (otevře prohlížeč).
+	 * Cleates a new session (opens a new browser window).
 	 * @return BrowserSession
 	 */
 	protected function createSession()
@@ -72,7 +73,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Vrátí aktuální browser session.
+	 * Returns current browser session.
+	 *
 	 * @return BrowserSession
 	 */
 	public function getSession()
@@ -84,6 +86,13 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 		return $this->session;
 	}
 
+	/**
+	 * Closes the session. Keeps the session open on failure.
+	 *
+	 * Note that the session closes itself anyway after while. But if you're
+	 * close to the computer that runs the test, it may help you to see what
+	 * exactly happened on the gorram tested page.
+	 */
 	protected function tearDown()
 	{
 		parent::tearDown();
@@ -98,7 +107,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Ověří, že aktuální URL míří na požadovaný presenter.
+	 * Checks that the current URL points to the desired presenter.
+	 *
 	 * @param string $presenterName
 	 * @param array|string $parameters
 	 */
@@ -113,7 +123,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Ověří název elementu.
+	 * Checks the element tag name.
+	 *
 	 * @param string $expectedTagName
 	 * @param Element $element
 	 */
@@ -123,7 +134,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Ověří hodnoty atributů elementu (ověřují se pouze vyjmenované atributy).
+	 * Checks attributes of an element (only listed attributes are checked).
 	 *
 	 * @param array|string $expectedAttributes
 	 * @param Element $element
@@ -137,7 +148,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Ověří shodnost dvou elementů v DOMu.
+	 * Checks identity of two DOM elements.
 	 *
 	 * @param Element $element
 	 * @param Element $other

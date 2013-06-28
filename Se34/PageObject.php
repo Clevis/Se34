@@ -6,7 +6,7 @@ use Nette\Object;
 use Nette\Reflection\ClassType;
 
 /**
- * Základní třída pro objekty představující stránky.
+ * Base class for objects representing pages.
  *
  * @property-read BrowserSession $session
  * @author Václav Šír
@@ -38,8 +38,8 @@ abstract class PageObject extends Object implements IPageObject
 	private $session;
 
 	/**
-	 * Zpracované zkratky z anotací property-read. Nepřistupovat přímo, získávat
-	 * přes `$this->getShortcuts()`.
+	 * Processed shortcuts from property-read annotations. Don't access this
+	 * directly, use `$this->getShortcuts()`.
 	 *
 	 * <code>
 	 * array(
@@ -58,16 +58,16 @@ abstract class PageObject extends Object implements IPageObject
 	private $shortcuts;
 
 	/**
-	 * Zpracované `@method` anotace.
+	 * Processed method annotations.
 	 *
 	 * <code>
 	 * array(
 	 *    // @method Foo clickBar()
 	 *    'clickBar' => array(
-	 *        'bar',       // název zkratky
-	 *        'click',     // název metody volané na zkratce
-	 *        'Foo',       // název třídy dalšího page objektu
-	 *        'SomeClass', // definující třída (kvůli namespacu)
+	 *        'bar',       // shortcut name
+	 *        'click',     // name of the method to call on the shortcut
+	 *        'Foo',       // class name of the next page object
+	 *        'SomeClass', // defining class (for namespace)
 	 *    )
 	 * );
 	 * </code>
@@ -84,10 +84,13 @@ abstract class PageObject extends Object implements IPageObject
 	}
 
 	/**
-	 * Přejde na tuto stránku.
+	 * Navigates to this page.
 	 *
-	 * Pokud je nastavené `$this->url`, tak přejde na toto URL. Jinak na
-	 * presenter podle `$this->presenterName` + `$this->parameters`.
+	 * If `$this->url` is set, it navigates straight to this URL. Otherwise
+	 * it navigates to the presenter from `$this->presenterName` with parameters
+	 * from `$this->parameters`.
+	 *
+	 * @todo Use annotations instead of properties.
 	 * @return PageObject $this
 	 */
 	public function navigate()
@@ -104,18 +107,15 @@ abstract class PageObject extends Object implements IPageObject
 	}
 
 	/**
-	 * Ověří, že je v prohlížeči otevřená tato stránka.
+	 * Checks that this page is open in the browser.
 	 *
-	 * Výchozí implementace to dělá podle aktuální URL. Pokud je nastaveno
-	 * `$this->url`, tak přímo podle této hodnoty. Jinak porovnává aktuální
-	 * presenter ({@see BrowserSession::getAppRequest()}) a parametry proti
-	 * `$this->presenterName` + `$this->parameters`.
+	 * Default implementaion checks current URL against either `$this->url`
+	 * or `$this->presenterName` and `$this->parameters`.
 	 *
-	 * Pokud je testovaná aplikace nějak brutálně zajaxovaná, může být záhodno
-	 * toto chování v potomcích změnit.
+	 * When testing some brually ajaxified application, this might be useful
+	 * to redefine in descendants.
 	 *
-	 * Provádí se při každém přístupu k prvku přes zkratku, tedy i při volání
-	 * magických metod.
+	 * It is performed by each access to an element through a shortcut.
 	 *
 	 * @throws ViewStateException
 	 */
@@ -125,7 +125,7 @@ abstract class PageObject extends Object implements IPageObject
 		{
 			if (($actualUrl = $this->session->url()) !== $this->url)
 			{
-				throw new ViewStateException(__METHOD__ . ": Očekávána URL '$this->url', je '$actualUrl'.");
+				throw new ViewStateException(__METHOD__ . ": URL '$this->url' was expected, actual URL is '$actualUrl'.");
 			}
 		}
 		else
@@ -133,13 +133,13 @@ abstract class PageObject extends Object implements IPageObject
 			$appRequest = $this->session->appRequest;
 			if ($appRequest->presenterName !== $this->presenterName)
 			{
-				throw new ViewStateException(__METHOD__ . ": Očekáván presenter '$this->presenterName', je '$appRequest->presenterName'.");
+				throw new ViewStateException(__METHOD__ . ": Presenter '$this->presenterName' was expected, actual presenter is '$appRequest->presenterName'.");
 			}
 			foreach (Utils::strToArray($this->parameters) as $name => $value)
 			{
 				if ($appRequest->parameters[$name] !== $value)
 				{
-					throw new ViewStateException(__METHOD__ . ": Parametr '$name' je očekáván '$value', je '{$appRequest->parameters[$name]}'.");
+					throw new ViewStateException(__METHOD__ . ": Parameter '$name' is expected to be '$value', but is '{$appRequest->parameters[$name]}'.");
 				}
 			}
 		}
@@ -154,17 +154,19 @@ abstract class PageObject extends Object implements IPageObject
 	}
 
 	/**
-	 * Pro každou položku zavolá plnící metodu.
+	 * Calls fill method for each item.
 	 *
 	 * <code>
+	 * // This code:
 	 * $page->fill(array(
 	 *    'foo' => 'bar',
 	 *    'e' => 'mc^2',
 	 * ));
-	 * // Provede tohle:
+	 * // Does this:
 	 * $page->fillFoo('bar')
 	 * $page->fillE('mc^2');
 	 * </code>
+	 *
 	 * @param array $values
 	 * @return PageObject
 	 */
@@ -178,7 +180,8 @@ abstract class PageObject extends Object implements IPageObject
 	}
 
 	/**
-	 * Získá názvy všech tříd, jichž je objekt instancí.
+	 * Gets names of all classes this object is instance of.
+	 *
 	 * @return array
 	 */
 	private function getThisClasses()
@@ -194,7 +197,8 @@ abstract class PageObject extends Object implements IPageObject
 	}
 
 	/**
-	 * Dodává zpracované definice zkratek k elementům (anotace `@property-read`).
+	 * Provides processed shortcuts definitions (property-read annotations).
+	 *
 	 * @return array
 	 */
 	private function getShortcuts()
@@ -207,11 +211,11 @@ abstract class PageObject extends Object implements IPageObject
 				$readOnlyProperties = isset($annotations['property-read']) ? $annotations['property-read'] : array();
 				foreach ($readOnlyProperties as $property)
 				{
-					// Rozkouskování @property-read $propertyType $propertyName $propertyDescription
+					// Splitting @property-read $propertyType $propertyName $propertyDescription
 					list($propertyType, $propertyName, $propertyDescription) = preg_split('~\s+~', $property, 3) + array(NULL, NULL, NULL);
 					if (substr($propertyName, 0, 1) === '$')
 					{
-						list($propertyDescription) = preg_split('~\s+#~', $propertyDescription, 2); // Zahození komentáře
+						list($propertyDescription) = preg_split('~\s+#~', $propertyDescription, 2); // Throw away the comment
 						$definition = Utils::strToArray($propertyDescription);
 						if ($definition)
 						{
@@ -231,11 +235,12 @@ abstract class PageObject extends Object implements IPageObject
 	}
 
 	/**
-	 * Zkonrtoluje vlastnosti elementu.
-	 * @param Element $element Kontrolovaný element.
-	 * @param string $shortcutId Název zkratky v chybové zprávě.
-	 * @param string|NULL $expectedTagName Požadovaný název elementu.
-	 * @param array|NULL $expectedAttribs Požadované hodnoty atributů.
+	 * Checks element name and attributes.
+	 *
+	 * @param Element $element Element to examine.
+	 * @param string $shortcutId Name of the shortcut (needed for the eventual error message).
+	 * @param string|NULL $expectedTagName Expected tag name.
+	 * @param array|NULL $expectedAttribs Expected values of attributes.
 	 * @throws ViewStateException
 	 */
 	private function checkTagNameAndAttributes(Element $element, $shortcutId, $expectedTagName, $expectedAttribs)
@@ -274,16 +279,18 @@ abstract class PageObject extends Object implements IPageObject
 	}
 
 	/**
-	 * Zpřístupňuje zkratky k prvkům stránky definované přes anotace
-	 * `@property-read Element $name strategy=value` (pokud pro `$name`
-	 * neexistuje getter).
+	 * Provides access to shortcuts of page elements defined using property-read
+	 * annotations (eg. `property-read Element $name strategy=value`).
 	 *
-	 * Definice zkratky může navíc obsahovat název tagu a vyžadované hodnoty
-	 * atributů a ty se potom kontrolují: `@property-read Element $name
+	 * If there is a getter for the value (eg. method `getFoo()` for `$foo` property),
+	 * the getter is used instead.
+	 *
+	 * Definition of a shortcut may include the tag name and required attributes
+	 * values. These are checked then. Eg. `property-read Element $name
 	 * strategy=value, tagName, [attrib=value, another=value]`.
 	 *
-	 * Případný komentář se odděluje mezerou a křížkem: `@property-read Element
-	 * $name strategy=value # Tohle už je komentář.`.
+	 * Eventual comment may be separated by a space and a hash: `property-read
+	 * Element $name strategy=value # Now this is a comment.`
 	 *
 	 * @param string $name
 	 * @return mixed
@@ -323,8 +330,9 @@ abstract class PageObject extends Object implements IPageObject
 	}
 
 	/**
-	 * Po změně URL tato metoda zjistí, na který z page objektů vyjmenovaných
-	 * v `@return` anotaci volající metody jsme přešli.
+	 * This method finds out on which page are we (if any), from the list of
+	 * page object types on `return` annotation.
+	 *
 	 * @return IPageObject
 	 */
 	protected function getNextPage()
@@ -334,10 +342,11 @@ abstract class PageObject extends Object implements IPageObject
 	}
 
 	/**
-	 * Po změně URL tato metoda zjistí, na který z vyjmenovaných page objektů jsme přešli.
+	 * This method can find out, on which of named page object types we are.
 	 *
-	 * @param array $returnTypes Možné návratové typy.
-	 * @param string $definingClass Třída, ze které se bere namespace v případě relativních názvů tříd.
+	 * @param $possibleReturnTypes
+	 * @param string $definingClass Class which namespace is taken as a reference to relatively defined class names. Todo do this more clever
+	 * @internal param array $returnTypes Possible return types.
 	 * @return IPageObject
 	 */
 	private function getNextPageFromList($possibleReturnTypes, $definingClass)
@@ -345,8 +354,8 @@ abstract class PageObject extends Object implements IPageObject
 		foreach ($possibleReturnTypes as $returnType)
 		{
 			// \Foo ==> \Foo
-			// Foo ==> \ClassNamespace\Foo (pokud existuje)
-			// Foo ==> \Foo (pokud \ClassNamespace\Foo neexistuje)
+			// Foo ==> \ClassNamespace\Foo (if it exists)
+			// Foo ==> \Foo (if \ClassNamespace\Foo doesn't exist)
 			if ($returnType{0} !== '\\')
 			{
 				$absolutizedReturnType = '\\' . ClassType::from($definingClass)->getNamespaceName() . '\\' . $returnType;
@@ -389,21 +398,24 @@ abstract class PageObject extends Object implements IPageObject
 	}
 
 	/**
-	 * Provádí volání "magických" metod z anotací.
+	 * Performs calling "magic" methods from annotations.
 	 *
-	 * Například `@method SomePage clickFoo()` definuje magickou metodu,
-	 * jejíž volání zavolá `$this->foo->click()` a vrátí objekt typu `SomePage`.
-	 * Pokud `$this` je instancí toho typu, vrátí se `$this`, jinak se vytváří
-	 * nový objekt. V každém případě se na návratovém objektu volá metoda {@see
-	 * self::checkState()}.
+	 * For example, annotation `method SomePage clickFoo()` defines a magic
+	 * method that calls `$this->foo->click()` and returns an object of type
+	 * `SomePage`. If `$this` is instance of that type, it will return `$this`.
+	 * Otherwise it instantiates a new object.
 	 *
-	 * Návratových typů může být v anotaci víc, oddělené svislítkem - postupně
-	 * se zkouší a použije se první, u kterého projde `checkState()`.
+	 * Either way it calls the method {@see self::checkState()} afterwise on the
+	 * return object.
 	 *
-	 * Další magickou metodou je fillShortcut - pokud je definovaná příslušná
-	 * zkratka, přeloží se na $this->shortcut->value() a vrátí $this.
+	 * The annotation may contain more return types, separated by vertical bar.
+	 * First that match is returned back.
 	 *
-	 * @param string $name Název volané metody.
+	 * Another magic method is fillShortcut - if it is defined such a shortcut,
+	 * it will translate to `$this->shortcut->value($input)`, but it returns
+	 * `$this`.
+	 *
+	 * @param string $name Name of called method.
 	 * @param array $args
 	 * @return mixed
 	 */

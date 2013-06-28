@@ -3,10 +3,10 @@
 namespace Se34;
 
 /**
- * Neočekávaný stav na stránce.
+ * Unexpected state of a page.
  *
- * Buďto je zobrazená jiná stránka ({@see PageObject::checkState()}), nebo
- * nějaký element nenaplňuje definovaná očekávání ({@see PageObject::__get()}).
+ * It is either some other page displayed than it was expected ({@see PageObject::checkState()}),
+ * or some element doesn't fulfill expectations ({@see PageObject::__get()}).
  *
  * @author Václav Šír
  */

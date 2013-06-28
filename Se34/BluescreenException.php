@@ -3,7 +3,7 @@
 namespace Se34;
 
 /**
- * Na stránce byla detekována obrazovka smrti.
+ * Blue Screen of Death was detected on the page.
  *
  * @author Václav Šír
  */

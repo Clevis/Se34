@@ -3,9 +3,10 @@
 namespace Se34;
 
 /**
- * Objekt reprezentující DOM prvek.
+ * Object that represents a DOM element.
  *
- * Slouží hlavně k tomu, abych nemusel psát šílený název třídy `PHPUnit_Extensions_Selenium2TestCase_Element`.
+ * Main purpose of this class is, that I don't want to write the crazy name
+ * of the class `PHPUnit_Extensions_Selenium2TestCase_Element`.
  *
  * @author Václav Šír
  */
@@ -13,7 +14,9 @@ class Element extends \PHPUnit_Extensions_Selenium2TestCase_Element
 {
 
 	/**
-	 * Vytvoří objekt elementu z hodnoty, kterou vrátil Selenium driver.
+	 * Creates the element object from a value returned by Selenium WebDriver.
+	 *
+	 * Almost exact copy of its parent, but uses `static` instead of `self`.
 	 *
 	 * @param array $value
 	 * @param \PHPUnit_Extensions_Selenium2TestCase_URL $parentFolder
@@ -32,7 +35,9 @@ class Element extends \PHPUnit_Extensions_Selenium2TestCase_Element
 	}
 
 	/**
-	 * Hledá element uvnitř tohoto elementu.
+	 * Finds an element in the scope of this element.
+	 *
+	 * @param \PHPUnit_Extensions_Selenium2TestCase_ElementCriteria $criteria
 	 * @return Element
 	 */
 	public function element(\PHPUnit_Extensions_Selenium2TestCase_ElementCriteria $criteria)
@@ -42,7 +47,9 @@ class Element extends \PHPUnit_Extensions_Selenium2TestCase_Element
 	}
 
 	/**
-	 * Hledá elementy uvnitř tohoto elementu.
+	 * Finds elements in the scope of this element.
+	 *
+	 * @param \PHPUnit_Extensions_Selenium2TestCase_ElementCriteria $criteria
 	 * @return Element[] array of instances of Se34\Element
 	 */
 	public function elements(\PHPUnit_Extensions_Selenium2TestCase_ElementCriteria $criteria)

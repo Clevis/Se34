@@ -12,11 +12,16 @@ class Utils
 {
 
 	/**
-	 * Helper na převod řetězců na array.
+	 * Helper for string to array conversion.
 	 *
-	 * Na několika místech umožňuju z pohodlnosti místo array vložit řetězec ve
-	 * formátu Neon bez závorek. Tj. například `'a = b, c = d'`, což tenhle helper
-	 * převede na `array('a' => 'b', 'c' => 'd')`.
+	 * Here or ther I enable to use strings instead of arrays in parameters
+	 * of some methods. If you like the short array definition from PHP 5.4,
+	 * then you must like this, even better if you still have to rely on
+	 * PHP 5.3...
+	 *
+	 * The format is basically the Neon format ({@link http://ne-on.org/}, just
+	 * the surrounding brackets are added. So `a = b, e: mc2` will translate to
+	 * `array('a' => 'b', 'e' => 'mc2')` et cetera.
 	 *
 	 * @param array|string $value
 	 * @return array
@@ -31,7 +36,7 @@ class Utils
 	}
 
 	/**
-	 * Získá návratové typy z `@return` anotace metody.
+	 * Gains possible return type from the `return` method annotation.
 	 *
 	 * @param string $className
 	 * @param string $methodName
@@ -45,7 +50,7 @@ class Utils
 	}
 
 	/**
-	 * Získá anotace třídy.
+	 * Gets annotations of a class. Not its predecessors, only of this class.
 	 *
 	 * @param object|string $object
 	 * @return array

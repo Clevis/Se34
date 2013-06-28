@@ -11,7 +11,7 @@ interface IPageObject
 	public function __construct(BrowserSession $session);
 
 	/**
-	 * Ověří, že je v prohlížeči otevřená tato stránka.
+	 * Checks that this page is open in browser.
 	 * @throws ViewStateException
 	 */
 	public function checkState();
