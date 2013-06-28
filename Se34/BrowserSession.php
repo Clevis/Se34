@@ -105,10 +105,19 @@ class BrowserSession extends \PHPUnit_Extensions_Selenium2TestCase_Session
 	}
 
 	/**
-	 * Vrátí URL jako UrlScript objekt.
+	 * Current URL as an UrlScript object.
 	 * @return \Nette\Http\UrlScript
 	 */
-	private function getUrlScript($url)
+	public function getUrlScript()
+	{
+		return $this->getUrlScriptForUrl($this->url());
+	}
+
+	/**
+	 * @param $url
+	 * @return \Nette\Http\UrlScript
+	 */
+	private function getUrlScriptForUrl($url)
 	{
 		$baseUrl = new \Nette\Http\Url($this->context->parameters['selenium']['baseUrl']);
 		$urlScript = new \Nette\Http\UrlScript($url);
