@@ -1,6 +1,9 @@
 Se34 - pomocné třídy pro práci se Seleniem
 ==========================================
 
+# Toto README je silně neaktuální, připravuju lepší.
+# This README is outdated, better documentation coming soon.
+
 Tato knihovna závisí na:
 - Nette
 - PHPUnit
