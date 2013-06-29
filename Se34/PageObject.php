@@ -24,7 +24,7 @@ abstract class PageObject extends PageComponent implements IPageObject
 	 *
 	 * @var array|string
 	 */
-	protected $parameters = array();
+	protected $presenterParameters = array();
 
 	/**
 	 *
@@ -59,7 +59,7 @@ abstract class PageObject extends PageComponent implements IPageObject
 		}
 		else
 		{
-			$this->session->navigate($this->presenterName, $this->parameters);
+			$this->session->navigate($this->presenterName, $this->presenterParameters);
 		}
 		return $this;
 	}
@@ -93,7 +93,7 @@ abstract class PageObject extends PageComponent implements IPageObject
 			{
 				throw new ViewStateException(__METHOD__ . ": Presenter '$this->presenterName' was expected, actual presenter is '$appRequest->presenterName'.");
 			}
-			foreach (Utils::strToArray($this->parameters) as $name => $value)
+			foreach (Utils::strToArray($this->presenterParameters) as $name => $value)
 			{
 				if ($appRequest->parameters[$name] !== $value)
 				{
