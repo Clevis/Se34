@@ -5,11 +5,8 @@ namespace Se34;
 /**
  * @author Václav Šír
  */
-interface IPageObject
+interface IPageObject extends IPageComponent
 {
-
-	public function __construct(BrowserSession $session);
-
 	/**
 	 * Checks that this page is open in browser.
 	 * @throws ViewStateException

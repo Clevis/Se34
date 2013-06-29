@@ -10,7 +10,7 @@ namespace Se34;
  *
  * @author Václav Šír
  */
-class Element extends \PHPUnit_Extensions_Selenium2TestCase_Element
+class Element extends \PHPUnit_Extensions_Selenium2TestCase_Element implements IElementsFinder
 {
 
 	/**
@@ -63,4 +63,29 @@ class Element extends \PHPUnit_Extensions_Selenium2TestCase_Element
 		return $elements;
 	}
 
+	/**
+	 * Find the first element that matches the criteria and return it. Or throw
+	 * an exception.
+	 *
+	 * @param string $strategy
+	 * @param string $selector
+	 * @return Element
+	 */
+	public function findElement($strategy, $selector)
+	{
+		return $this->element($this->using($strategy)->value($selector));
+	}
+
+	/**
+	 * Find all elements that match given criteria. If none found, than return
+	 * an empty array.
+	 *
+	 * @param string $strategy
+	 * @param string $selector
+	 * @return Element[]
+	 */
+	public function findElements($strategy, $selector)
+	{
+		return $this->elements($this->using($strategy)->value($selector));
+	}
 }

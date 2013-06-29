@@ -29,7 +29,7 @@ use Nette\ObjectMixin;
  * @method string orientation() Get the current browser orientation (LANDSCAPE or PORTRAIT).
  * @author Václav Šír
  */
-class BrowserSession extends \PHPUnit_Extensions_Selenium2TestCase_Session
+class BrowserSession extends \PHPUnit_Extensions_Selenium2TestCase_Session implements IElementsFinder
 {
 
 	/**
@@ -356,4 +356,29 @@ class BrowserSession extends \PHPUnit_Extensions_Selenium2TestCase_Session
 		ObjectMixin::remove($this, $name);
 	}
 
+	/**
+	 * Find the first element that matches the criteria and return it. Or throw
+	 * an exception.
+	 *
+	 * @param string $strategy
+	 * @param string $selector
+	 * @return Element
+	 */
+	public function findElement($strategy, $selector)
+	{
+		return $this->element($this->using($strategy)->value($selector));
+	}
+
+	/**
+	 * Find all elements that match given criteria. If none found, than return
+	 * an empty array.
+	 *
+	 * @param string $strategy
+	 * @param string $selector
+	 * @return Element[]
+	 */
+	public function findElements($strategy, $selector)
+	{
+		return $this->elements($this->using($strategy)->value($selector));
+	}
 }

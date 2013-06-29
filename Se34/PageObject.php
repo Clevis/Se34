@@ -76,9 +76,9 @@ abstract class PageObject extends Object implements IPageObject
 	private $methods;
 
 	/**
-	 * @param BrowserSession $session
+	 * @param IElementsFinder $session
 	 */
-	public function __construct(BrowserSession $session)
+	public function __construct(IElementsFinder $session, array $parameters = NULL)
 	{
 		$this->session = $session;
 	}
@@ -474,6 +474,32 @@ abstract class PageObject extends Object implements IPageObject
 		{
 			return parent::__call($name, $args);
 		}
+	}
+
+	/**
+	 * Find the first element that matches the criteria and return it. Or throw
+	 * an exception.
+	 *
+	 * @param string $strategy
+	 * @param string $selector
+	 * @return Element
+	 */
+	public function findElement($strategy, $selector)
+	{
+		$this->session->findElement($strategy, $selector);
+	}
+
+	/**
+	 * Find all elements that match given criteria. If none found, than return
+	 * an empty array.
+	 *
+	 * @param string $strategy
+	 * @param string $selector
+	 * @return Element[]
+	 */
+	public function findElements($strategy, $selector)
+	{
+		$this->session->findElements($strategy, $selector);
 	}
 
 }
