@@ -20,7 +20,14 @@ class ElementComponent extends PageComponent implements IPageComponent
 		{
 			$selector = reset($this->parameters);
 			$strategy = key($this->parameters);
-			$this->root = $this->parent->findElement($strategy, $selector);
+			if ($selector instanceof Element)
+			{
+				$this->root = $selector;
+			}
+			else
+			{
+				$this->root = $this->parent->findElement($strategy, $selector);
+			}
 			$expectedTagName = next($this->parameters);
 			$expectedAttributes = next($this->parameters);
 			if ($expectedTagName !== FALSE)
