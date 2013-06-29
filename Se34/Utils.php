@@ -70,4 +70,20 @@ class Utils
 		}
 		return $annotations;
 	}
+
+	/**
+	 * @param string $className
+	 * @return array
+	 */
+	public static function getWholeLineageOfClass($className)
+	{
+		$lineage = array($className);
+		while (($lineage[] = get_parent_class(end($lineage))) !== FALSE)
+		{
+			;
+		}
+		array_pop($lineage);
+		rsort($lineage);
+		return $lineage;
+	}
 }

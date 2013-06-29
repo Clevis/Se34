@@ -122,14 +122,7 @@ class PageComponent extends Object implements IPageComponent
 	 */
 	private function getThisClasses()
 	{
-		$lineage = array(get_class($this));
-		while (($lineage[] = get_parent_class(end($lineage))) !== FALSE)
-		{
-			;
-		}
-		array_pop($lineage);
-		rsort($lineage);
-		return $lineage;
+		return Utils::getWholeLineageOfClass(get_class($this));
 	}
 
 	/**

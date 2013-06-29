@@ -38,6 +38,7 @@ abstract class PageObject extends PageComponent implements IPageObject
 		{
 			throw new \InvalidArgumentException('PageObject must not have a $parent.'); // todo Se34\InvalidArgumentException
 		}
+		$this->parseNavigationAnnotations();
 		parent::__construct($session, $this, $parameters);
 	}
 
@@ -48,7 +49,6 @@ abstract class PageObject extends PageComponent implements IPageObject
 	 * it navigates to the presenter from `$this->presenterName` with parameters
 	 * from `$this->parameters`.
 	 *
-	 * @todo Use annotations instead of properties.
 	 * @return PageObject $this
 	 */
 	public function navigate()
@@ -111,6 +111,26 @@ abstract class PageObject extends PageComponent implements IPageObject
 	public function findElements($strategy, $selector)
 	{
 		return $this->session->findElements($strategy, $selector);
+	}
+
+	private function parseNavigationAnnotations()
+	{
+		foreach (Utils::getWholeLineageOfClass(get_class($this)) as $className)
+		{
+			$classAnnotations = Utils::getClassAnnotations($className);
+			if (isset($classAnnotations['presenterName']))
+			{
+				$this->presenterName = reset($classAnnotations['presenterName']);
+			}
+			if (isset($classAnnotations['presenterParameters']))
+			{
+				$this->presenterParameters = reset($classAnnotations['presenterParameters']);
+			}
+			if (isset($classAnnotations['url']))
+			{
+				$this->url = reset($classAnnotations['url']);
+			}
+		}
 	}
 
 }
