@@ -7,9 +7,4 @@ namespace Se34;
  */
 interface IPageObject extends IPageComponent
 {
-	/**
-	 * Checks that this page is open in browser.
-	 * @throws ViewStateException
-	 */
-	public function checkState();
 }
