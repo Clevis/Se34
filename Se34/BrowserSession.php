@@ -207,7 +207,7 @@ class BrowserSession extends \PHPUnit_Extensions_Selenium2TestCase_Session imple
 	 */
 	public function waitForAjax($timeout = 60)
 	{
-		return $this->waitForCondition('jQuery.active == 0', $timeout);
+		return $this->waitForCondition('typeof jQuery != "undefined" && jQuery.active == 0', $timeout);
 	}
 
 	/**
