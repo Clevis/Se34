@@ -11,7 +11,7 @@ use Nette\Reflection\ClassType;
  * @property-read BrowserSession $parent
  * @author Václav Šír
  */
-abstract class PageObject extends PageComponent implements IPageObject
+abstract class PageObject extends PageComponent
 {
 
 	/**

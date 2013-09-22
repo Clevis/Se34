@@ -58,7 +58,7 @@ class PageComponent extends Object implements IPageComponent
 
 	/**
 	 * @param BrowserSession $session
-	 * @param IElementsFinder $parent
+	 * @param IPageComponent $parent
 	 * @param array $parameters
 	 */
 	public function __construct(BrowserSession $session, IPageComponent $parent = NULL, array $parameters = NULL)
@@ -299,19 +299,19 @@ class PageComponent extends Object implements IPageComponent
 			}
 			else
 			{
-				if (!is_subclass_of($returnType, 'Se34\IPageObject'))
+				if (!is_subclass_of($returnType, 'Se34\IPageComponent'))
 				{
 					$backtrace = debug_backtrace();
 					$className = get_class($this);
 					if ($backtrace[1]['object'] === $this && $backtrace[1]['function'] === '__call')
 					{
-						$method = "magické metody $className::{$backtrace[2]['function']}()";
+						$method = "magic method $className::{$backtrace[2]['function']}()";
 					}
 					else
 					{
-						$method = "metody $className::{$backtrace[1]['function']}()";
+						$method = "method $className::{$backtrace[1]['function']}()";
 					}
-					throw new \UnexpectedValueException(__METHOD__ . ": Návratový typ $method je '$returnType' a ten " . (class_exists($returnType) ? 'neexistuje.' : " není typu 'Se34\\IPageObject'."));
+					throw new \UnexpectedValueException(__METHOD__ . ": Return type of $method - '$returnType' - " . (class_exists($returnType) ? 'is not an instance of IPageComponent.' : " doesn't exist."));
 				}
 				$nextPage = new $returnType($this->session);
 			}

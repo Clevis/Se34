@@ -2,9 +2,7 @@
 
 namespace Se34;
 
-use Nette\Object;
-
-class ElementComponent extends PageComponent implements IPageComponent
+class ElementComponent extends PageComponent
 {
 
 	/** @var Element */
