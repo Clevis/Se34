@@ -103,13 +103,25 @@ abstract class PageObject extends PageComponent
 		}
 	}
 
+	/**
+	 * Override this method to provide some custom selectors.
+	 *
+	 * @param $strategy
+	 * @param $selector
+	 */
+	protected function modifyCriteria(&$strategy, &$selector)
+	{
+	}
+
 	public function findElement($strategy, $selector)
 	{
+		$this->modifyCriteria($strategy, $selector);
 		return $this->session->findElement($strategy, $selector);
 	}
 
 	public function findElements($strategy, $selector)
 	{
+		$this->modifyCriteria($strategy, $selector);
 		return $this->session->findElements($strategy, $selector);
 	}
 

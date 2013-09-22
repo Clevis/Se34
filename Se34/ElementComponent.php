@@ -52,6 +52,16 @@ class ElementComponent extends PageComponent
 	}
 
 	/**
+	 * Override this method to provide some custom selectors.
+	 *
+	 * @param $strategy
+	 * @param $selector
+	 */
+	protected function modifyCriteria(&$strategy, &$selector)
+	{
+	}
+
+	/**
 	 * Find the first element that matches the criteria and return it. Or throw
 	 * an exception.
 	 *
@@ -61,6 +71,7 @@ class ElementComponent extends PageComponent
 	 */
 	public function findElement($strategy, $selector)
 	{
+		$this->modifyCriteria($strategy, $selector);
 		return $this->getRoot()->findElement($strategy, $selector);
 	}
 
@@ -74,6 +85,7 @@ class ElementComponent extends PageComponent
 	 */
 	public function findElements($strategy, $selector)
 	{
+		$this->modifyCriteria($strategy, $selector);
 		return $this->getRoot()->findElements($strategy, $selector);
 	}
 
